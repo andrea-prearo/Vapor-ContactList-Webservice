@@ -1,13 +1,15 @@
 import Vapor
+import SwiftyBeaverVapor
+import SwiftyBeaver
 
-let drop = Droplet()
+let logger = SwiftyBeaverProvider(destinations: [ConsoleDestination()])
 
-drop.get { req in
-    return try drop.view.make("welcome", [
-    	"message": drop.localization[req.lang, "welcome", "title"]
-    ])
+let app = Droplet()
+app.addProvider(logger)
+let log = app.log.self
+
+app.get("/") { _ in
+    return "Hello!"
 }
 
-drop.resource("posts", PostController())
-
-drop.run()
+app.run()
